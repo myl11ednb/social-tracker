@@ -1,4 +1,4 @@
-const CACHE = 'social-tracker-v1';
+const CACHE = 'social-tracker-v2';
 const ASSETS = [
   './social-tracker.html',
   './manifest.json',
