@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Tracker — Myles</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Social Tracker">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
+  .page { max-width: 1060px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .title { font-size:22px; font-weight:500; }
+  .subtitle { font-size:13px; color:#999; margin-top:2px; }
+
+  /* Platform cards */
+  .platforms { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:1.25rem; }
+  .pcard { background:#fff; border:1px solid #ebebeb; border-radius:14px; padding:18px; }
+  .pcard-ig { border-top:3px solid #9333EA; }
+  .pcard-tt { border-top:3px solid #0F766E; }
+  .pcard-yt { border-top:3px solid #DC2626; }
+  .pcard-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+  .pcard-name { font-size:13px; font-weight:500; margin-bottom:2px; }
+  .pcard-handle { font-size:11px; color:#999; }
+  .trend { font-size:11px; font-weight:500; padding:3px 9px; border-radius:99px; white-space:nowrap; }
+  .trend-up { background:#E5F2D8; color:#27500A; }
+  .trend-down { background:#FCEBEB; color:#791F1F; }
+  .trend-flat { background:#f1efe8; color:#5F5E5A; }
+  .followers { font-size:30px; font-weight:500; line-height:1; margin-bottom:3px; }
+  .fchange { font-size:12px; margin-bottom:14px; }
+  .fchange-pos { color:#27500A; }
+  .fchange-neg { color:#791F1F; }
+  .fchange-neu { color:#aaa; }
+  .pstats { display:grid; grid-template-columns:1fr 1fr; gap:8px; border-top:1px solid #f2f2f2; padding-top:12px; }
+  .pstat-lbl { font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:3px; }
+  .pstat-val { font-size:15px; font-weight:500; }
+
+  /* Analysis */
+  .analysis { background:#fff; border:1px solid #ebebeb; border-radius:12px; padding:18px 20px; margin-bottom:1.25rem; }
+  .a-lbl { font-size:10px; font-weight:500; color:#bbb; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+  .a-text { font-size:13px; color:#555; line-height:1.65; }
+  .a-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+  .a-pill { font-size:11px; font-weight:500; padding:3px 10px; border-radius:99px; background:#f1efe8; color:#5F5E5A; }
+  .a-pill-green { background:#E5F2D8; color:#27500A; }
+  .a-pill-amber { background:#FAEEDA; color:#633806; }
+  .a-pill-red { background:#FCEBEB; color:#791F1F; }
+
+  /* Posts */
+  .sec-row { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .sec-title { font-size:15px; font-weight:500; }
+  .filters { display:flex; gap:6px; flex-wrap:wrap; }
+  .fbtn { font-size:11px; padding:4px 12px; border-radius:99px; border:1px solid #ddd; background:#fff; color:#666; cursor:pointer; font-family:inherit; transition:all 0.1s; }
+  .fbtn:hover { border-color:#aaa; }
+  .fbtn.on { background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
+
+  .table-wrap { background:#fff; border:1px solid #ebebeb; border-radius:14px; overflow:hidden; margin-bottom:1.25rem; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { font-size:10px; font-weight:500; color:#aaa; text-transform:uppercase; letter-spacing:0.05em; padding:10px 14px; text-align:left; border-bottom:1px solid #f2f2f2; background:#fafaf8; white-space:nowrap; }
+  td { padding:11px 14px; border-bottom:1px solid #f9f9f9; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  .post-title { font-weight:500; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .post-date { color:#999; white-space:nowrap; }
+  .num { font-variant-numeric:tabular-nums; }
+  .num-muted { font-variant-numeric:tabular-nums; color:#aaa; }
+
+  .pbadge { font-size:10px; font-weight:500; padding:2px 7px; border-radius:99px; white-space:nowrap; }
+  .b-ig { background:#EEEDFE; color:#3C3489; }
+  .b-tt { background:#D4F0E8; color:#085041; }
+  .b-yt { background:#FCEBEB; color:#791F1F; }
+
+  .fmt-tag { font-size:10px; color:#888; background:#f5f4f0; padding:2px 7px; border-radius:99px; white-space:nowrap; }
+
+  .perf-top { font-size:10px; font-weight:500; padding:2px 8px; border-radius:99px; background:#E5F2D8; color:#27500A; }
+  .perf-low { font-size:10px; font-weight:500; padding:2px 8px; border-radius:99px; background:#FCEBEB; color:#791F1F; }
+  .perf-avg { font-size:10px; font-weight:500; padding:2px 8px; border-radius:99px; background:#f1efe8; color:#5F5E5A; }
+
+  .eng-cell { display:flex; align-items:center; gap:7px; }
+  .eng-bar-bg { width:44px; height:4px; background:#f2f2f2; border-radius:99px; flex-shrink:0; }
+  .eng-bar { height:4px; border-radius:99px; }
+
+  /* Format breakdown */
+  .breakdown-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .bcard { background:#fff; border:1px solid #ebebeb; border-radius:12px; padding:16px; }
+  .bcard-title { font-size:13px; font-weight:500; margin-bottom:14px; }
+  .brow { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .brow:last-child { margin-bottom:0; }
+  .brow-name { font-size:12px; color:#555; min-width:120px; }
+  .brow-bar-bg { flex:1; height:5px; background:#f2f2f2; border-radius:99px; }
+  .brow-bar { height:5px; border-radius:99px; background:#1a1a1a; }
+  .brow-val { font-size:12px; font-weight:500; min-width:38px; text-align:right; }
+
+  .empty { text-align:center; padding:2.5rem; color:#bbb; font-size:13px; line-height:1.6; }
+
+  /* Daily checklist */
+  .checklist-card { background:#fff; border:1px solid #ebebeb; border-radius:14px; padding:18px 20px; margin-bottom:1.25rem; }
+  .cl-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .cl-title-row { display:flex; align-items:center; gap:10px; }
+  .cl-title { font-size:15px; font-weight:500; }
+  .cl-count { font-size:11px; font-weight:500; color:#999; background:#f5f4f0; padding:2px 9px; border-radius:99px; }
+  .cl-reset { font-size:11px; color:#bbb; background:none; border:none; cursor:pointer; font-family:inherit; padding:0; }
+  .cl-reset:hover { color:#555; }
+  .cl-progress-bg { height:4px; background:#f2f2f2; border-radius:99px; margin-bottom:16px; overflow:hidden; }
+  .cl-progress-bar { height:4px; border-radius:99px; background:#1a1a1a; transition:width 0.3s ease; }
+  .cl-groups { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  .cl-group { margin-bottom:4px; }
+  .cl-group-label { font-size:10px; font-weight:500; color:#bbb; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; margin-top:12px; }
+  .cl-group:first-child .cl-group-label { margin-top:0; }
+  .cl-item { display:flex; align-items:flex-start; gap:9px; padding:5px 0; cursor:pointer; user-select:none; }
+  .cl-item:hover .cl-box { border-color:#aaa; }
+  .cl-box { width:16px; height:16px; border:1.5px solid #ddd; border-radius:4px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .cl-box svg { display:none; }
+  .cl-item.done .cl-box { background:#1a1a1a; border-color:#1a1a1a; }
+  .cl-item.done .cl-box svg { display:block; }
+  .cl-item.done .cl-label { color:#bbb; text-decoration:line-through; }
+  .cl-label { font-size:13px; color:#333; line-height:1.4; }
+  .cl-tag { font-size:10px; color:#aaa; background:#f5f4f0; padding:1px 6px; border-radius:99px; margin-left:4px; vertical-align:middle; }
+  .cl-done-msg { text-align:center; font-size:13px; color:#27500A; background:#E5F2D8; border-radius:8px; padding:10px; margin-top:12px; display:none; }
+
+  @media (max-width:720px) { .cl-groups { grid-template-columns:1fr; } }
+
+  @media (max-width:720px) {
+    .platforms { grid-template-columns:1fr; }
+    .breakdown-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="title">Social tracker</div>
+      <div class="subtitle" id="date-line">—</div>
+    </div>
+  </div>
+
+  <div class="platforms" id="platform-cards"></div>
+
+  <div class="analysis">
+    <div class="a-lbl">Claude's read</div>
+    <div class="a-text" id="a-text">—</div>
+    <div class="a-pills" id="a-pills"></div>
+  </div>
+
+  <div class="checklist-card">
+    <div class="cl-header">
+      <div class="cl-title-row">
+        <div class="cl-title">Daily growth checklist</div>
+        <span class="cl-count" id="cl-count">0 / 0</span>
+      </div>
+      <button class="cl-reset" onclick="resetChecklist()">Reset</button>
+    </div>
+    <div class="cl-progress-bg"><div class="cl-progress-bar" id="cl-bar" style="width:0%"></div></div>
+    <div class="cl-groups" id="cl-groups"></div>
+    <div class="cl-done-msg" id="cl-done">🔥 All done — great day for the algorithm.</div>
+  </div>
+
+  <div class="sec-row">
+    <div class="sec-title">Recent posts</div>
+    <div class="filters" id="filters">
+      <button class="fbtn on" data-f="all">All</button>
+      <button class="fbtn" data-f="ig">Instagram</button>
+      <button class="fbtn" data-f="tt">TikTok</button>
+      <button class="fbtn" data-f="yt">YouTube</button>
+      <button class="fbtn" data-f="hot">Top posts</button>
+      <button class="fbtn" data-f="cold">Low perf</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Post</th>
+          <th>Platform</th>
+          <th>Format</th>
+          <th>Posted</th>
+          <th>Views</th>
+          <th>Likes</th>
+          <th>Comments</th>
+          <th>Saves / Shares</th>
+          <th>Eng rate</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="posts-body"></tbody>
+    </table>
+  </div>
+
+  <div class="breakdown-grid" id="breakdown"></div>
+
+</div>
+<script>
+/* ================================================================
+   DATA — Claude updates this section each daily session.
+   Sources:
+     Instagram: https://www.instagram.com/mylesnichols.dxb/
+     TikTok:    https://www.tiktok.com/creator-center/analytics
+     YouTube:   https://studio.youtube.com/
+   ================================================================ */
+const META = {
+  date: "May 11, 2026",
+  time: "08:00 AM"
+};
+
+const PLATFORMS = {
+  ig: {
+    label: "Instagram",
+    handle: "@mylesnichols.dxb",
+    url: "https://www.instagram.com/mylesnichols.dxb/",
+    followers: null,
+    followersChange: null,
+    weeklyReach: null,
+    avgEngRate: null,
+    trend: "flat"
+  },
+  tt: {
+    label: "TikTok",
+    handle: "@mylesnichols.dxb",
+    url: "https://www.tiktok.com/@mylesnichols.dxb",
+    followers: null,
+    followersChange: null,
+    weeklyViews: null,
+    avgEngRate: null,
+    trend: "flat"
+  },
+  yt: {
+    label: "YouTube",
+    handle: "@MylesNicholsDXB",
+    url: "https://www.youtube.com/@MylesNicholsDXB",
+    followers: null,
+    followersChange: null,
+    weeklyViews: null,
+    avgEngRate: null,
+    trend: "flat"
+  }
+};
+
+/* Recent posts — Claude populates from analytics each session.
+   platform: "ig" | "tt" | "yt"
+   format: e.g. "talking head", "b-roll", "text overlay", "voiceover", "carousel", "shorts"
+   engRate: number, e.g. 4.2 (not "4.2%")
+   perf: "hot" | "ok" | "cold" (Claude assigns vs account average)
+   savesShares: saves for IG, shares for TT/YT */
+const POSTS = [];
+
+/* Claude's written analysis — updated each session */
+const ANALYSIS = {
+  text: "No data yet — run the daily update to populate your tracker.",
+  pills: []
+  /* pills example: [
+    { label: "Talking head winning", type: "green" },
+    { label: "TikTok outpacing IG", type: "green" },
+    { label: "YouTube needs attention", type: "amber" }
+  ] */
+};
+
+/* Format leaderboard — Claude calculates from POSTS */
+const FORMATS = [];
+/* example: [
+  { name: "Talking head", avgEngRate: 6.2, count: 5 },
+  { name: "Text overlay",  avgEngRate: 4.8, count: 3 },
+  { name: "B-roll",        avgEngRate: 3.1, count: 4 }
+] */
+/* ================================================================
+   END DATA
+   ================================================================ */
+
+/* ================================================================
+   DAILY CHECKLIST — edit the groups/items below to customise.
+   Checks auto-reset each new day.
+   ================================================================ */
+const CHECKLIST = [
+  {
+    group: "Non-negotiables",
+    items: [
+      "Post or schedule 1 piece of content",
+      "Reply to every comment within 1 hour of posting",
+      "Reply to all DMs",
+      "Post 1–3 Instagram Stories"
+    ]
+  },
+  {
+    group: "Engagement",
+    items: [
+      "Like + comment on 15–20 Dubai / real estate accounts",
+      "Comment on 5 trending real estate TikToks",
+      "Engage on Instagram Explore (real estate content)",
+      "Watch 15+ videos on TikTok FYP (trains algorithm)"
+    ]
+  },
+  {
+    group: "Content pipeline",
+    items: [
+      "Save 2–3 content ideas for later",
+      "Check what's trending in Dubai real estate today",
+      "Review yesterday's content analytics"
+    ]
+  },
+  {
+    group: "Weekly (do at least 1 today)",
+    items: [
+      "Post a YouTube video or Short",
+      "Film a batch of B-roll footage",
+      "Record a voiceover or talking-head piece"
+    ]
+  }
+];
+/* ================================================================ */
+
+const CL_KEY = 'cl_' + new Date().toISOString().slice(0, 10);
+
+function loadClState() {
+  try { return JSON.parse(localStorage.getItem(CL_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveClState(s) {
+  try { localStorage.setItem(CL_KEY, JSON.stringify(s)); } catch(e) {}
+}
+
+function renderChecklist() {
+  const state = loadClState();
+  const el = document.getElementById('cl-groups');
+  el.innerHTML = '';
+  let total = 0, done = 0;
+
+  CHECKLIST.forEach(section => {
+    const col = document.createElement('div');
+    col.className = 'cl-group';
+    col.innerHTML = `<div class="cl-group-label">${section.group}</div>`;
+
+    section.items.forEach(item => {
+      const id = section.group + ':' + item;
+      const isDone = !!state[id];
+      total++; if (isDone) done++;
+      const row = document.createElement('div');
+      row.className = 'cl-item' + (isDone ? ' done' : '');
+      row.innerHTML = `
+        <div class="cl-box">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="cl-label">${item}</span>`;
+      row.addEventListener('click', () => {
+        const s = loadClState();
+        s[id] = !s[id];
+        saveClState(s);
+        renderChecklist();
+      });
+      col.appendChild(row);
+    });
+    el.appendChild(col);
+  });
+
+  document.getElementById('cl-count').textContent = done + ' / ' + total;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('cl-bar').style.width = pct + '%';
+  const doneMsg = document.getElementById('cl-done');
+  doneMsg.style.display = (done === total && total > 0) ? 'block' : 'none';
+}
+
+function resetChecklist() {
+  try { localStorage.removeItem(CL_KEY); } catch(e) {}
+  renderChecklist();
+}
+
+renderChecklist();
+
+document.getElementById('date-line').textContent = 'Last updated: ' + META.date + ' · ' + META.time;
+
+function fmtNum(n) {
+  if (n === null || n === undefined) return '—';
+  if (typeof n === 'string') return n;
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return n.toLocaleString();
+}
+
+function trendHtml(t) {
+  if (t === 'up')   return '<span class="trend trend-up">↑ Growing</span>';
+  if (t === 'down') return '<span class="trend trend-down">↓ Dropping</span>';
+  return '<span class="trend trend-flat">→ Flat</span>';
+}
+
+function changeHtml(v) {
+  if (v === null || v === undefined) return '<span class="fchange fchange-neu">No data yet</span>';
+  if (v === 0) return '<span class="fchange fchange-neu">No change this week</span>';
+  const cls = v > 0 ? 'fchange-pos' : 'fchange-neg';
+  return `<span class="fchange ${cls}">${v > 0 ? '+' : ''}${v.toLocaleString()} this week</span>`;
+}
+
+function engColor(r) {
+  if (r >= 6) return '#27500A';
+  if (r >= 3) return '#885008';
+  return '#791F1F';
+}
+
+/* Platform cards */
+const pcEl = document.getElementById('platform-cards');
+const pColorClass = { ig: 'pcard-ig', tt: 'pcard-tt', yt: 'pcard-yt' };
+const pReachLabel = { ig: 'Weekly reach', tt: 'Weekly views', yt: 'Weekly views' };
+
+['ig', 'tt', 'yt'].forEach(k => {
+  const p = PLATFORMS[k];
+  pcEl.innerHTML += `
+    <div class="pcard ${pColorClass[k]}">
+      <div class="pcard-top">
+        <div>
+          <div class="pcard-name">${p.label}</div>
+          <div class="pcard-handle">${p.handle}</div>
+        </div>
+        ${trendHtml(p.trend)}
+      </div>
+      <div class="followers">${p.followers !== null ? p.followers.toLocaleString() : '—'}</div>
+      ${changeHtml(p.followersChange)}
+      <div class="pstats">
+        <div>
+          <div class="pstat-lbl">${pReachLabel[k]}</div>
+          <div class="pstat-val">${p.weeklyReach || p.weeklyViews || '—'}</div>
+        </div>
+        <div>
+          <div class="pstat-lbl">Avg eng rate</div>
+          <div class="pstat-val">${p.avgEngRate || '—'}</div>
+        </div>
+      </div>
+    </div>`;
+});
+
+/* Analysis */
+document.getElementById('a-text').textContent = ANALYSIS.text;
+const pillsEl = document.getElementById('a-pills');
+(ANALYSIS.pills || []).forEach(p => {
+  const cls = p.type === 'green' ? 'a-pill-green' : p.type === 'amber' ? 'a-pill-amber' : p.type === 'red' ? 'a-pill-red' : 'a-pill';
+  pillsEl.innerHTML += `<span class="a-pill ${cls}">${p.label}</span>`;
+});
+
+/* Posts table */
+const plabels = { ig: 'Instagram', tt: 'TikTok', yt: 'YouTube' };
+const pbadges = { ig: 'b-ig', tt: 'b-tt', yt: 'b-yt' };
+
+function renderPosts(f) {
+  const body = document.getElementById('posts-body');
+  if (!POSTS.length) {
+    body.innerHTML = `<tr><td colspan="10"><div class="empty">No posts yet — run the daily update to populate this table with your latest content analytics.</div></td></tr>`;
+    return;
+  }
+  const items = POSTS.filter(p => {
+    if (f === 'ig')   return p.platform === 'ig';
+    if (f === 'tt')   return p.platform === 'tt';
+    if (f === 'yt')   return p.platform === 'yt';
+    if (f === 'hot')  return p.perf === 'hot';
+    if (f === 'cold') return p.perf === 'cold';
+    return true;
+  });
+  if (!items.length) {
+    body.innerHTML = `<tr><td colspan="10"><div class="empty">No posts match this filter.</div></td></tr>`;
+    return;
+  }
+  const maxEng = Math.max(...items.map(p => p.engRate || 0), 1);
+  body.innerHTML = items.map(p => `
+    <tr>
+      <td class="post-title" title="${p.title}">${p.title}</td>
+      <td><span class="pbadge ${pbadges[p.platform]}">${plabels[p.platform]}</span></td>
+      <td><span class="fmt-tag">${p.format}</span></td>
+      <td class="post-date">${p.date}</td>
+      <td class="num">${fmtNum(p.views)}</td>
+      <td class="num">${fmtNum(p.likes)}</td>
+      <td class="num">${fmtNum(p.comments)}</td>
+      <td class="num">${fmtNum(p.savesShares)}</td>
+      <td>
+        <div class="eng-cell">
+          <span style="font-size:12px;font-weight:500;color:${engColor(p.engRate||0)};min-width:34px">${p.engRate != null ? p.engRate.toFixed(1) + '%' : '—'}</span>
+          <div class="eng-bar-bg"><div class="eng-bar" style="width:${Math.round(((p.engRate||0)/maxEng)*100)}%;background:${engColor(p.engRate||0)}"></div></div>
+        </div>
+      </td>
+      <td><span class="${p.perf==='hot'?'perf-top':p.perf==='cold'?'perf-low':'perf-avg'}">${p.perf==='hot'?'Top post':p.perf==='cold'?'Low perf':'Average'}</span></td>
+    </tr>`).join('');
+}
+
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('[data-f]');
+  if (!btn) return;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('on', b === btn));
+  renderPosts(btn.dataset.f);
+});
+
+renderPosts('all');
+
+/* Format breakdown */
+const bdEl = document.getElementById('breakdown');
+if (!FORMATS.length) {
+  bdEl.innerHTML = `<div class="bcard" style="grid-column:1/-1"><div class="bcard-title">Format & platform breakdown</div><div class="empty" style="padding:1.5rem 0">Run the daily update to see which content formats and platforms are performing best.</div></div>`;
+} else {
+  const sorted = [...FORMATS].sort((a,b) => b.avgEngRate - a.avgEngRate);
+  const maxF = sorted[0].avgEngRate;
+  const fRows = sorted.map((f,i) => `
+    <div class="brow">
+      <span class="brow-name">${f.name} <span style="color:#ccc;font-size:11px">(${f.count})</span></span>
+      <div class="brow-bar-bg"><div class="brow-bar" style="width:${Math.round((f.avgEngRate/maxF)*100)}%;opacity:${Math.max(0.4, 1-i*0.18)}"></div></div>
+      <span class="brow-val">${f.avgEngRate.toFixed(1)}%</span>
+    </div>`).join('');
+
+  const byPlat = {};
+  POSTS.forEach(p => {
+    if (!byPlat[p.platform]) byPlat[p.platform] = [];
+    byPlat[p.platform].push(p.engRate || 0);
+  });
+  const platAvgs = Object.entries(byPlat).map(([k,vals]) => ({
+    label: plabels[k], avg: vals.reduce((s,v)=>s+v,0)/vals.length
+  })).sort((a,b)=>b.avg-a.avg);
+  const maxP = platAvgs[0]?.avg || 1;
+  const pRows = platAvgs.map(p => `
+    <div class="brow">
+      <span class="brow-name">${p.label}</span>
+      <div class="brow-bar-bg"><div class="brow-bar" style="width:${Math.round((p.avg/maxP)*100)}%"></div></div>
+      <span class="brow-val">${p.avg.toFixed(1)}%</span>
+    </div>`).join('');
+
+  bdEl.innerHTML = `
+    <div class="bcard">
+      <div class="bcard-title">Format leaderboard</div>
+      ${fRows}
+    </div>
+    <div class="bcard">
+      <div class="bcard-title">Platform avg engagement</div>
+      ${pRows}
+    </div>`;
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
