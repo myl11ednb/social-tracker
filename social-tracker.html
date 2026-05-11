@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Social Tracker">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
@@ -314,17 +316,25 @@ const CHECKLIST = [
 ];
 /* ================================================================ */
 
-const CL_KEY = 'cl_' + new Date().toISOString().slice(0, 10);
+// Firebase — real-time checklist sync across all devices
+const firebaseConfig = {
+  apiKey: "AIzaSyCaXK625gdp6jlrjM2Zn-SdLcFM25kb1v8",
+  authDomain: "myles-social-tracker.firebaseapp.com",
+  databaseURL: "https://myles-social-tracker-default-rtdb.firebaseio.com",
+  projectId: "myles-social-tracker",
+  storageBucket: "myles-social-tracker.firebasestorage.app",
+  messagingSenderId: "929367630800",
+  appId: "1:929367630800:web:7c29d293fd41a750b14fd5"
+};
 
-function loadClState() {
-  try { return JSON.parse(localStorage.getItem(CL_KEY) || '{}'); } catch(e) { return {}; }
-}
-function saveClState(s) {
-  try { localStorage.setItem(CL_KEY, JSON.stringify(s)); } catch(e) {}
-}
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const TODAY = new Date().toISOString().slice(0, 10);
+const clRef = db.ref('checklist/' + TODAY);
+let currentClState = {};
 
-function renderChecklist() {
-  const state = loadClState();
+function renderChecklist(state) {
+  state = state || {};
   const el = document.getElementById('cl-groups');
   el.innerHTML = '';
   let total = 0, done = 0;
@@ -348,10 +358,9 @@ function renderChecklist() {
         </div>
         <span class="cl-label">${item}</span>`;
       row.addEventListener('click', () => {
-        const s = loadClState();
-        s[id] = !s[id];
-        saveClState(s);
-        renderChecklist();
+        const newState = { ...currentClState };
+        newState[id] = !newState[id];
+        clRef.set(newState);
       });
       col.appendChild(row);
     });
@@ -366,11 +375,14 @@ function renderChecklist() {
 }
 
 function resetChecklist() {
-  try { localStorage.removeItem(CL_KEY); } catch(e) {}
-  renderChecklist();
+  clRef.set({});
 }
 
-renderChecklist();
+// Real-time listener — fires instantly on any device when state changes
+clRef.on('value', snapshot => {
+  currentClState = snapshot.val() || {};
+  renderChecklist(currentClState);
+});
 
 document.getElementById('date-line').textContent = 'Last updated: ' + META.date + ' · ' + META.time;
 
