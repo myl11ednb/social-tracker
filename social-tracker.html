@@ -218,7 +218,7 @@ const PLATFORMS = {
     label: "Instagram",
     handle: "@mylesnichols.dxb",
     url: "https://www.instagram.com/mylesnichols.dxb/",
-    followers: null,
+    followers: 320,
     followersChange: null,
     weeklyReach: null,
     avgEngRate: null,
@@ -228,11 +228,11 @@ const PLATFORMS = {
     label: "TikTok",
     handle: "@mylesnichols.dxb",
     url: "https://www.tiktok.com/@mylesnichols.dxb",
-    followers: null,
+    followers: 640,
     followersChange: null,
-    weeklyViews: null,
+    weeklyViews: 47481,
     avgEngRate: null,
-    trend: "flat"
+    trend: "up"
   },
   yt: {
     label: "YouTube",
@@ -240,7 +240,7 @@ const PLATFORMS = {
     url: "https://www.youtube.com/@MylesNicholsDXB",
     followers: null,
     followersChange: null,
-    weeklyViews: null,
+    weeklyViews: 270,
     avgEngRate: null,
     trend: "flat"
   }
@@ -252,26 +252,44 @@ const PLATFORMS = {
    engRate: number, e.g. 4.2 (not "4.2%")
    perf: "hot" | "ok" | "cold" (Claude assigns vs account average)
    savesShares: saves for IG, shares for TT/YT */
-const POSTS = [];
+const POSTS = [
+  { title: "How to get travel insurance to come to Dubai", platform: "tt", format: "talking head", date: "2026-05", views: 37600, likes: null, comments: null, savesShares: null, engRate: null, perf: "hot" },
+  { title: "STORY TIME: UAE Off-Plan incredible demand from repeat investors", platform: "tt", format: "talking head", date: "2026-05", views: 1711, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "One of the highest spec apartments in Dubai: Select Group - Jumeirah Branded", platform: "tt", format: "b-roll", date: "2026-05", views: 1263, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "Huge announcement for tourism in Dubai!!", platform: "tt", format: "talking head", date: "2026-05", views: 1106, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "WHY ARE FAMILIES CHOOSING ARABIAN RANCHES 3?", platform: "tt", format: "talking head", date: "2026-05", views: 702, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "How are seasoned investors making the most of first time buyers?", platform: "tt", format: "talking head", date: "2026-05", views: 676, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "HOW TO INCREASE THE VALUE OF YOUR VILLA OR TOWNHOUSE", platform: "tt", format: "talking head", date: "2026-05", views: 618, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "Is the price of waiting worth the risk of missing out on payment plans?", platform: "tt", format: "talking head", date: "2026-05", views: 600, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "My clients were looking for options — after looking at a couple of properties...", platform: "tt", format: "talking head", date: "2026-05", views: 536, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "LEARN FROM OTHERS: DO NOT MAKE THIS MISTAKE", platform: "yt", format: "shorts", date: "2026-05", views: 270, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "TOP TRANSACTIONS OF THE WEEK", platform: "tt", format: "text overlay", date: "2026-05", views: 539, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "What are the 4 principles when investing in UAE property?", platform: "tt", format: "talking head", date: "2026-05", views: 511, likes: null, comments: null, savesShares: null, engRate: null, perf: "ok" },
+  { title: "TARA PARK LIMITED STOCK", platform: "tt", format: "text overlay", date: "2026-05", views: 496, likes: null, comments: null, savesShares: null, engRate: null, perf: "cold" },
+  { title: "WHY THE LOCATION OF ARABIAN RANCHES IS KEY", platform: "tt", format: "talking head", date: "2026-05", views: 333, likes: null, comments: null, savesShares: null, engRate: null, perf: "cold" },
+  { title: "LANDLORDS, WATCH THIS BEFORE WORKING WITH AGENTS", platform: "tt", format: "talking head", date: "2026-05", views: 287, likes: null, comments: null, savesShares: null, engRate: null, perf: "cold" },
+  { title: "TOP TRANSACTIONS IN ARABIAN RANCHES 1, 2 & 3 THIS WEEK", platform: "tt", format: "text overlay", date: "2026-05", views: 295, likes: null, comments: null, savesShares: null, engRate: null, perf: "cold" }
+];
 
 /* Claude's written analysis — updated each session */
 const ANALYSIS = {
-  text: "No data yet — run the daily update to populate your tracker.",
-  pills: []
-  /* pills example: [
-    { label: "Talking head winning", type: "green" },
-    { label: "TikTok outpacing IG", type: "green" },
-    { label: "YouTube needs attention", type: "amber" }
-  ] */
+  text: "One video is doing all the heavy lifting: the Dubai travel insurance post hit 37.6K views — 57x your account average of ~660. The hook? Practical Dubai lifestyle info, not real estate. That's your signal. TikTok is 2x Instagram in followers (640 vs 320), so the algorithm is responding. YouTube is just getting started with 1 Short and 270 views. The play right now: batch more practical Dubai lifestyle content (cost of living, visa tips, getting around) to ride the format that's already working, then use that audience to funnel into the property angle.",
+  pills: [
+    { label: "Travel insurance video: 37.6K", type: "green" },
+    { label: "TikTok 2x Instagram", type: "green" },
+    { label: "Lifestyle content > real estate", type: "green" },
+    { label: "IG engagement data needed", type: "amber" },
+    { label: "YouTube just starting", type: "amber" }
+  ]
 };
 
 /* Format leaderboard — Claude calculates from POSTS */
-const FORMATS = [];
-/* example: [
-  { name: "Talking head", avgEngRate: 6.2, count: 5 },
-  { name: "Text overlay",  avgEngRate: 4.8, count: 3 },
-  { name: "B-roll",        avgEngRate: 3.1, count: 4 }
-] */
+const FORMATS = [
+  { name: "Talking head", avgViews: 4526, count: 11 },
+  { name: "Text overlay", avgViews: 443, count: 3 },
+  { name: "B-roll", avgViews: 1263, count: 1 },
+  { name: "Shorts (YT)", avgViews: 270, count: 1 }
+];
 /* ================================================================
    END DATA
    ================================================================ */
