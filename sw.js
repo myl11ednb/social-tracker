@@ -1,4 +1,4 @@
-const CACHE = 'social-tracker-v5';
+const CACHE = 'social-tracker-v6';
 const ASSETS = [
   './social-tracker.html',
   './manifest.json',
@@ -20,8 +20,15 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Network-first: always try live version, fall back to cache only if offline
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
