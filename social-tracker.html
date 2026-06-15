@@ -213,8 +213,8 @@
      YouTube:   https://studio.youtube.com/
    ================================================================ */
 const META = {
-  date: "June 8, 2026",
-  time: "09:00 AM"
+  date: "June 15, 2026",
+  time: "08:08 AM"
 };
 
 const PLATFORMS = {
@@ -222,30 +222,30 @@ const PLATFORMS = {
     label: "Instagram",
     handle: "@mylesnichols.dxb",
     url: "https://www.instagram.com/mylesnichols.dxb/",
-    followers: 378,
-    followersChange: 3,
-    weeklyReach: 150,
-    avgEngRate: 2.5,
-    trend: "down"
+    followers: 420,
+    followersChange: 42,
+    weeklyReach: 8900,
+    avgEngRate: 1.2,
+    trend: "up"
   },
   tt: {
     label: "TikTok",
     handle: "@mylesnichols.dxb",
     url: "https://www.tiktok.com/@mylesnichols.dxb",
-    followers: 1016,
-    followersChange: 2,
-    weeklyViews: 3400,
-    avgEngRate: 2.7,
+    followers: 1044,
+    followersChange: 28,
+    weeklyViews: 23800,
+    avgEngRate: 2.1,
     trend: "up"
   },
   yt: {
     label: "YouTube",
     handle: "@MylesNicholsDXB",
     url: "https://www.youtube.com/@MylesNicholsDXB",
-    followers: 1,
-    followersChange: 0,
-    weeklyViews: 675,
-    avgEngRate: 0.5,
+    followers: 2,
+    followersChange: 1,
+    weeklyViews: 2480,
+    avgEngRate: 1.3,
     trend: "up"
   }
 };
@@ -257,39 +257,39 @@ const PLATFORMS = {
    perf: "hot" | "ok" | "cold" (Claude assigns vs account average)
    savesShares: saves for IG, shares for TT/YT */
 const POSTS = [
-  { platform: "ig", title: "Is the market slowing? AED 4.5B in one day", format: "Reel", date: "May 19", views: 648, likes: 23, comments: 1, savesShares: 1, engRate: 3.9, perf: "hot" },
-  { platform: "tt", title: "AED 4.5 billion. One Monday. Dubai's property market", format: "talking head", date: "May 19", views: 1000, likes: 28, comments: 2, savesShares: 0, engRate: 3.0, perf: "ok" },
-  { platform: "yt", title: "AED 4.5 billion in ONE day! Dubai's property market", format: "Short", date: "May 19", views: 87, likes: 0, comments: 0, savesShares: 0, engRate: 0.0, perf: "cold" },
-  { platform: "ig", title: "Dubai homeowners now hold as long as London & New York", format: "Reel", date: "May 18", views: 1700, likes: 35, comments: 4, savesShares: 2, engRate: 2.4, perf: "ok" },
-  { platform: "tt", title: "Dubai homeowners are now holding property as long as London & NY", format: "talking head", date: "May 18", views: 436, likes: 10, comments: 1, savesShares: 0, engRate: 2.5, perf: "ok" },
-  { platform: "yt", title: "Dubai property holders now match London & New York", format: "Short", date: "May 18", views: 365, likes: 0, comments: 0, savesShares: 0, engRate: 0.0, perf: "cold" },
-  { platform: "ig", title: "What 100M AED gets you in La Mer Dubai", format: "Reel", date: "May 16", views: 3700, likes: 63, comments: 6, savesShares: 2, engRate: 1.9, perf: "ok" },
-  { platform: "tt", title: "Steps from the beach, nothing else to say – La Mer South", format: "b-roll", date: "May 16", views: 611, likes: 11, comments: 3, savesShares: 0, engRate: 2.3, perf: "ok" },
-  { platform: "yt", title: "Steps from the beach, nothing else to say", format: "Short", date: "May 16", views: 165, likes: 0, comments: 0, savesShares: 0, engRate: 0.0, perf: "cold" },
-  { platform: "ig", title: "Is Dubai the most convenient city in the world?", format: "Reel", date: "May 15", views: 2200, likes: 34, comments: 1, savesShares: 2, engRate: 1.7, perf: "ok" },
-  { platform: "yt", title: "Shoutout to all the delivery drivers! ❤️", format: "Short", date: "May 15", views: 1100, likes: 0, comments: 21, savesShares: 0, engRate: 1.9, perf: "hot" },
-  { platform: "tt", title: "Is Dubai the most convenient city? Shoutout to all the delivery drivers", format: "talking head", date: "May 15", views: 524, likes: 12, comments: 3, savesShares: 0, engRate: 2.9, perf: "ok" }
+  { platform: "ig", title: "No travel insurance to Dubai? Not anymore — Emirates", format: "Reel", date: "Jun 13", views: 3846, likes: 30, comments: 10, savesShares: 3, engRate: 1.1, perf: "ok" },
+  { platform: "yt", title: "Emirates will fly you home guaranteed", format: "Short", date: "Jun 12", views: 1295, likes: 4, comments: 0, savesShares: 0, engRate: 0.3, perf: "cold" },
+  { platform: "ig", title: "Is this the best growth in Dubai? (offices +203%)", format: "Reel", date: "Jun 11", views: 2546, likes: 21, comments: 6, savesShares: 4, engRate: 1.2, perf: "ok" },
+  { platform: "yt", title: "Dubai offices just did something that hasn't happened before", format: "Short", date: "Jun 11", views: 58, likes: 1, comments: 0, savesShares: 0, engRate: 1.7, perf: "ok" },
+  { platform: "ig", title: "AED 1.1 billion and he's only 26 — Shangri-La deal", format: "Reel", date: "Jun 10", views: 5048, likes: 58, comments: 4, savesShares: 11, engRate: 1.4, perf: "ok" },
+  { platform: "tt", title: "AED 1.1 billion. And he's only 26. Abbas Sajwani buys Shangri-La", format: "talking head", date: "Jun 10", views: 19000, likes: 281, comments: 16, savesShares: 48, engRate: 1.8, perf: "ok" },
+  { platform: "yt", title: "AED 1.1 billion and he's only 26 — the deal that shook Dubai", format: "Short", date: "Jun 10", views: 890, likes: 11, comments: 0, savesShares: 0, engRate: 1.2, perf: "ok" },
+  { platform: "tt", title: "The Dubai flip era is over. And the investors who haven't figured it out", format: "talking head", date: "Jun 9", views: 958, likes: 17, comments: 2, savesShares: 2, engRate: 2.2, perf: "hot" },
+  { platform: "yt", title: "The Dubai flip era is over and this is why", format: "Short", date: "Jun 9", views: 175, likes: 2, comments: 0, savesShares: 0, engRate: 1.1, perf: "ok" },
+  { platform: "tt", title: "The Yards is launching today — Beyond, OMNIYAT Group", format: "talking head", date: "Jun 8", views: 878, likes: 10, comments: 0, savesShares: 1, engRate: 1.3, perf: "ok" },
+  { platform: "tt", title: "The Yards just launched today — Beyond, City of Arabia", format: "b-roll", date: "Jun 8", views: 595, likes: 18, comments: 0, savesShares: 0, engRate: 3.0, perf: "hot" },
+  { platform: "yt", title: "AED 1,000,000 one bedroom — The Yards just launched", format: "Short", date: "Jun 8", views: 41, likes: 1, comments: 0, savesShares: 0, engRate: 2.4, perf: "hot" }
 ];
 
 /* Claude's written analysis — updated each session */
 const ANALYSIS = {
-  text: "No new posts in 3 weeks — TikTok weekly views have halved to 3.4K (from 6.8K) and IG estimated reach has collapsed to ~150, purely from residual algorithm serve. The travel insurance video remains the account's only compounding asset: 60K all-time views, still pulling 2.6K views/week, 1,625 likes and 516 shares confirming search-intent content has durable shelf life. Post 3 Reels this week minimum — one news-hook data post, one lifestyle b-roll, one question-format hook — to restart IG distribution and rebuild TikTok weekly view momentum.",
+  text: "Posting restarted after the 3-week gap and it worked — TikTok weekly views jumped to 23.8K (from 3.4K) and net followers +28, while IG added +42 to 420. The standout win is the AED 1.1bn Shangri-La deal post: 19K TikTok views, 281 likes, 48 shares and +29 followers from that single video, plus 5K views and 11 saves on IG — confirming named-deal, big-number news hooks massively outperform project-launch content (The Yards launch posts capped at 41–878 views). Next 2 posts should lead with a Dubai market-data or named-deal hook in the AED 1.1bn format, not listing launches; YouTube remains the weak link at 2 subs and near-zero engagement, so keep it as a repost channel only.",
   pills: [
-    { label: "Travel insurance: 60K all-time, still 2.6K views/week", type: "good" },
-    { label: "No posts in 3 weeks — TikTok views halved to 3.4K", type: "bad" },
-    { label: "Delivery drivers YT: 1.1K views, 21 comments — best YT engagement", type: "good" },
-    { label: "IG reach collapsed (~150 est.) — post immediately", type: "bad" },
-    { label: "TikTok net +2 followers this week — stable", type: "ok" },
-    { label: "Search-intent format (travel insurance template) = highest ROI", type: "good" }
+    { label: "AED 1.1bn Shangri-La: 19K TikTok views, +29 followers — top post", type: "good" },
+    { label: "Posting restarted — TikTok weekly views 3.4K → 23.8K", type: "good" },
+    { label: "IG followers +42 to 420 in one week", type: "good" },
+    { label: "News-hook data beats launches (Yards capped <900 views)", type: "ok" },
+    { label: "Travel insurance evergreen still pulling: 61K all-time", type: "good" },
+    { label: "YouTube flat at 2 subs — minimal engagement", type: "bad" }
   ]
 };
 
 /* Format leaderboard — Claude calculates from POSTS */
 const FORMATS = [
-  { name: "Talking head (TT)", avgEngRate: 2.8, count: 3 },
-  { name: "Reel (IG)", avgEngRate: 2.5, count: 4 },
-  { name: "B-roll (TT)", avgEngRate: 2.3, count: 1 },
-  { name: "Short (YT)", avgEngRate: 0.5, count: 4 }
+  { name: "B-roll (TT)", avgEngRate: 3.0, count: 1 },
+  { name: "Talking head (TT)", avgEngRate: 1.8, count: 3 },
+  { name: "Short (YT)", avgEngRate: 1.3, count: 5 },
+  { name: "Reel (IG)", avgEngRate: 1.2, count: 3 }
 ];
 /* ================================================================
    END DATA
